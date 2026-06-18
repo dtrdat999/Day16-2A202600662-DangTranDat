@@ -1,498 +1,196 @@
 ---
 artifact: 02 — JTBD Project Analysis
-bai-tap: Lab 2 — Dùng JTBD để soi lại dự án nhóm
-format: Theo nhóm dự án → share trong bàn → chốt hypothesis cuối
-time: 25 phút trên lớp
-nop-cuoi: Có — đây là file nộp cuối của Lab 2
-companion-reference: Strategyn_JTBD_Playbook.pdf (giảng viên gửi kèm)
+bai-tap: Lab 2 — Dùng JTBD để phân tích dự án
 ---
 
-# Lab 2 — JTBD Project Analysis / Dùng JTBD để soi lại dự án nhóm
+# Lab 2 — JTBD Project Analysis
 
-**Tên dự án / sản phẩm:** _______________  
+## Thông tin
 
-> Đây là **file duy nhất** của Lab 2.  
-> File này đồng thời đóng vai trò:
->
-> - guide từng bước,
-> - worksheet để điền trực tiếp,
-> - và file nộp cuối cho người chấm.
+- **Người làm:** Đặng Trần Đạt
+- **Mã học viên:** 2A202600662
+- **Hình thức:** Cá nhân
+- **Tên dự án:** DevVerify
+- **Ngày:** 18/06/2026
 
-Mục tiêu của bài này không phải brainstorm thêm thật nhiều tính năng AI.
-Mục tiêu là:
+## 1. Project Slice
 
-1. **xác định người dùng thực sự đang cố hoàn thành job gì**
-2. **hiểu họ đang dùng giải pháp nào để hoàn thành job đó hôm nay**
-3. **chỉ ra AI nên chen vào đúng bước nào trong workflow**
-4. **viết ra product hypothesis và assumption còn phải validate**
+DevVerify là ý tưởng sản phẩm hỗ trợ developer kiểm chứng câu trả lời và đoạn
+code do AI đề xuất trước khi áp dụng vào codebase thật.
 
-Quy tắc xuyên suốt: **không rõ job thì đừng bàn feature.**
+Lát cắt được phân tích trong bài là:
 
----
+> Developer đang debug một lỗi trong dự án và đã nhận được hướng sửa từ AI,
+> nhưng cần xác định hướng sửa đó có đúng, tương thích và đủ an toàn để áp dụng
+> hay không.
 
-## Cần mở song song 2 thứ
+Lát cắt này chỉ tập trung vào bước kiểm chứng trước khi sửa code, không bao gồm
+toàn bộ quy trình phát triển phần mềm hay một AI coding assistant hoàn chỉnh.
 
-1. **File này** — để điền trực tiếp
-2. **`Strategyn_JTBD_Playbook.pdf`** — giảng viên gửi kèm
+## 2. Project Snapshot và Market Context
 
-### Cách dùng playbook cho đúng
+### Project Snapshot
 
-Bạn **không cần đọc hết 48 trang**.  
-Trong bài này, playbook chủ yếu dùng để tra 4 thứ:
+1. **Vấn đề cần giải quyết:** AI có thể đưa ra câu trả lời nhanh và thuyết phục
+   nhưng vẫn có khả năng dùng API không tồn tại, bỏ sót context, tạo lỗ hổng
+   bảo mật hoặc đề xuất code không tương thích với dự án.
+2. **Người dùng chính:** Developer đang sử dụng ChatGPT, Claude, Gemini,
+   GitHub Copilot hoặc Cursor để debug và viết code.
+3. **Cách họ xử lý hiện nay:** Chạy thử code, đọc documentation, tìm trên
+   Stack Overflow/GitHub Issues, viết test hoặc hỏi đồng nghiệp.
 
-1. **Cách nhìn thị trường qua JTBD lens**
-2. **`Job executor` là ai**
-3. **Cách viết `job statement`: `verb + object + contextual clarifier`**
-4. **8 bước của `job map`**:
-   `define -> locate -> prepare -> confirm -> execute -> monitor -> modify -> conclude`
+### Market Context
 
-### 2 chương nên mở nhiều nhất
+AI coding assistant đã trở thành một phần phổ biến trong workflow của
+developer. Stack Overflow Developer Survey 2025 cho biết 84% người trả lời
+đang dùng hoặc dự định dùng AI trong quy trình phát triển, nhưng nghiên cứu
+trên 517 câu hỏi lập trình cũng phát hiện 52% câu trả lời ChatGPT được đánh giá
+có thông tin sai.
 
-- **Chapter 2 — Define Your Market**
-- **Chapter 3 — Build Your Job Map**
+Vì vậy, vấn đề mới không chỉ là tìm được câu trả lời nhanh mà còn là xác định
+câu trả lời nào có thể tin và áp dụng trong context cụ thể. Developer hiện phải
+tự ghép nhiều phương pháp kiểm chứng, khiến lợi ích tiết kiệm thời gian của AI
+bị giảm và tạo rủi ro nếu câu trả lời được chấp nhận quá sớm.
 
-> Dùng playbook để **tra framework và ví dụ**.  
-> Dùng file này để **làm bài và chốt output**.
+## 3. Job Executor và Core JTBD
 
----
+### Job Executor
 
-## Đầu ra bắt buộc
+**Job executor:** Developer trực tiếp sử dụng AI để debug hoặc sửa code trong
+một dự án phần mềm.
 
-Người chấm cần thấy đủ 6 phần trong chính file này:
+Đây là người trực tiếp đọc đề xuất, đánh giá bằng chứng, chạy thử và chịu trách
+nhiệm quyết định có đưa thay đổi vào codebase hay không. Engineering manager
+hoặc doanh nghiệp có thể là buyer, nhưng không phải người trực tiếp thực hiện
+job trong lát cắt này.
 
-1. **`Project slice` + market context**
-2. **`Job executor` + `core JTBD`**
-3. **3 `job stories`**
-4. **`JTBD lite map` + pain points**
-5. **`AI leverage point` + `product hypothesis`**
-6. **`Assumptions to validate` + verdict cuối sau thảo luận**
+### Core JTBD
 
-Nếu thiếu một trong sáu phần trên, bài sẽ bị xem là chưa hoàn chỉnh.
+> Xác minh một hướng sửa lỗi có đúng, tương thích và đủ an toàn trong context
+> của dự án trước khi áp dụng.
 
----
+Core JTBD này không phụ thuộc vào DevVerify hay AI. Ngay cả khi công cụ hiện
+tại biến mất, developer vẫn phải hoàn thành công việc kiểm chứng trước khi sửa
+code.
 
-## Cách làm trong lớp (25 phút)
+## 4. Job Stories
 
-```text
-3'  Chốt 1 lát cắt cụ thể của dự án
-7'  Viết market context + job executor + core JTBD
-6'  Viết 3 job stories + current alternatives
-6'  Điền JTBD lite map + AI leverage point + hypothesis
-3'  Share trong bàn và sửa version cuối
-```
-
-> Nếu dự án làm theo nhóm, cả nhóm có thể thảo luận chung.  
-> Nhưng file này vẫn nên có **version chốt rõ ràng** của người nộp.
-
----
-
-## Bước 0 — Khoanh đúng 1 lát cắt của dự án
-
-Phần lớn dự án nhóm viết quá rộng ở bước này, rồi sau đó mọi thứ mơ hồ theo.
-
-### Khoanh đúng 1 lát cắt theo 4 điểm
-
-- [ ] **1 nhóm người dùng chính**
-- [ ] **1 hoàn cảnh / tình huống rõ**
-- [ ] **1 job cốt lõi**
-- [ ] **1 workflow đủ cụ thể để vẽ ra được**
-
-### Điền nhanh trước khi làm
-
-- **Dự án của nhóm tôi là:** ___________________________________
-- **Lát cắt tôi chọn để phân tích hôm nay là:** ___________________________________
-- **Vì sao tôi chọn lát cắt này:**  
-  > ___________________________________
-
-### Viết quá rộng vs viết sắc hơn
-
-| Viết quá rộng | Viết sắc hơn |
-|---|---|
-| Giúp SME dùng AI để marketing | Giúp chủ shop online phản hồi câu hỏi trước mua hàng nhanh và nhất quán trong giờ cao điểm |
-| Dùng AI để làm slide | Tạo bản nháp deck nội bộ mạch lạc cho buổi họp gấp trong thời gian rất ngắn |
-| AI cho tuyển dụng | Giúp recruiter sàng lọc CV đầu vào nhanh hơn trước vòng gọi sơ bộ |
-
-> Nếu bạn không mô tả được **một hoàn cảnh cụ thể**, khả năng cao bạn đang viết quá rộng.
-
----
-
-## Bước 1 — Viết `Project Snapshot`
-
-### Tóm tắt dự án trong 3 dòng
-
-1. **Nhóm tôi đang nghĩ mình đang giải quyết vấn đề gì?**  
-   > ___________________________________
-
-2. **Người dùng chính hiện nhóm đang nhắm tới là ai?**  
-   > ___________________________________
-
-3. **Hiện tại người dùng đó đang giải quyết vấn đề này bằng cách nào?**  
-   > ___________________________________
-
----
-
-## Bước 2 — Viết `Market Context`
-
-Ở đây chưa cần solution. Chỉ cần bối cảnh thị trường đủ để hiểu:
-**ai đang gặp chuyện gì, trong hoàn cảnh nào, và vì sao bây giờ đáng giải.**
-
-### Trả lời 4 câu ngắn
-
-1. **Ai đang gặp vấn đề này?**  
-   > ___________________________________
-
-2. **Vấn đề xuất hiện trong hoàn cảnh nào?**  
-   > ___________________________________
-
-3. **Hiện tại họ đang dùng giải pháp thay thế nào?**  
-   > ___________________________________
-
-4. **Vì sao đây là thời điểm đáng giải?**  
-   > ___________________________________
-
-### Tóm tắt market context trong 3-4 dòng
-
-> _______________________________________________  
-> _______________________________________________
-
----
-
-## Bước 3 — Xác định `Job Executor`
-
-`Job executor` là người **trực tiếp dùng một giải pháp để hoàn thành job**.
-
-### Đừng nhầm với:
-
-- người mua tiền nhưng không trực tiếp làm job
-- người ảnh hưởng quyết định
-- cả một công ty hay một phòng ban quá rộng
-
-### Gợi ý viết cho đúng
-
-- Sai hoặc quá rộng: `SME`, `doanh nghiệp`, `thị trường`
-- Tốt hơn: `chủ shop online`, `nhân viên CSKH`, `recruiter`, `sales ops manager`
-
-### Điền
-
-- **Job executor của dự án này là:** ___________________________________
-- **Vì sao tôi tin đây là người trực tiếp "thuê" giải pháp để làm job:**  
-  > ___________________________________
-
----
-
-## Bước 4 — Viết `Core JTBD`
-
-`Core JTBD` là công việc cốt lõi người dùng đang cố hoàn thành.
-
-### Công thức gợi ý
-
-```text
-[verb] + [object] + [contextual clarifier]
-```
-
-### Ví dụ
-
-- Chưa tốt: `trả lời inbox bằng AI`
-- Tốt hơn: `giải quyết câu hỏi trước mua hàng nhanh và chính xác trong giờ cao điểm`
-
-- Chưa tốt: `dùng AI để viết nội dung`
-- Tốt hơn: `tạo bản nháp nội dung chiến dịch phù hợp với brand trong thời gian rất ngắn`
-
-### 3 tiêu chí tự kiểm
-
-- [ ] Nếu bỏ tool hiện tại đi, job này vẫn còn tồn tại
-- [ ] Trong câu không có tên sản phẩm, AI, chatbot, app, màn hình
-- [ ] Câu đang mô tả **điều user muốn hoàn thành**, không phải thứ product đang làm
-
-### Bản nháp 1
-
-**Core JTBD bản nháp:**  
-> _______________________________________________
-
-### Gạch bỏ từ solution nếu có
-
-- Các từ solution tôi đang lỡ nhét vào câu: _________________________________
-
-### Bản chốt
-
-**Core JTBD cuối cùng:**  
-> _______________________________________________
-
----
-
-## Bước 5 — Viết 3 `Job Stories`
-
-Nếu `core JTBD` là job ở mức cốt lõi, thì `job story` giúp bạn thấy
-**job này xuất hiện trong hoàn cảnh nào**.
-
-### Format
-
-```text
-When [trigger], I want to [motivation], so I can [outcome].
-```
-
-### Ví dụ
-
-`When inbox đổ dồn vào buổi tối, tôi muốn có câu trả lời nhất quán ngay lập tức, so I can không mất đơn vì phản hồi chậm.`
-
-### Bảng 3 job stories
-
-| # | Trigger / When | Motivation / I want to | Outcome / so I can | Điều story này cho thấy |
-|---|---|---|---|---|
-| JS1 | | | | |
-| JS2 | | | | |
-| JS3 | | | | |
-
-### Tự kiểm nhanh
-
-- [ ] Mỗi story là một **tình huống thật**, không phải slogan chung chung
-- [ ] 3 story không trùng hệt nhau
-- [ ] Sau khi đọc 3 story, tôi hình dung được lúc nào product của mình đáng xuất hiện
-
----
-
-## Bước 6 — Liệt kê `Current Alternatives`
-
-Qua JTBD lens, đối thủ không chỉ là app cùng ngành.
-Đối thủ là **bất kỳ thứ gì user đang "thuê" để làm job**:
-
-- thao tác tay
-- file Excel / Google Sheets
-- intern / nhân viên
-- agency
-- ChatGPT / Claude / Gemini
-- công cụ chuyên dụng khác
-- hoặc thậm chí là **không làm gì cả**
-
-### Bảng alternatives
-
-| Alternative hiện tại | User đang thuê nó để làm gì? | Nó làm tốt gì? | Nó fail ở đâu? | Switching cost hiện tại cao hay thấp? |
-|---|---|---|---|---|
-| Alt 1 | | | | |
-| Alt 2 | | | | |
-| Alt 3 | | | | |
-
-### Kết luận nhanh
-
-**Nếu project của tôi biến mất hôm nay, user nhiều khả năng sẽ quay về:**  
-> _______________________________________________
-
----
-
-## Bước 7 — Điền `JTBD Lite Map`
-
-Đây là bản rút gọn của `job map` trong playbook.
-
-### Mục tiêu
-
-Không phải để làm consultant workshop hoàn chỉnh.  
-Mục tiêu là nhìn ra:
-
-1. workflow hiện tại của user đi qua những bước nào
-2. bước nào đang đau nhất
-3. AI có nên chen vào đó không
-
-### 8 bước tham chiếu từ playbook
-
-1. `Define`
-2. `Locate`
-3. `Prepare`
-4. `Confirm`
-5. `Execute`
-6. `Monitor`
-7. `Modify`
-8. `Conclude`
-
-> Không nhất thiết bước nào cũng quan trọng như nhau trong dự án của bạn.  
-> Nếu ít liên quan, ghi `N/A`, đừng để trống.
-
-### Bảng JTBD Lite Map
-
-| Step | Trong workflow này user đang cố làm gì? | Hôm nay họ đang dùng gì? | Friction / pain hiện tại | Mức đau |
-|---|---|---|---|---|
-| Define | | | | Low / Med / High |
-| Locate | | | | Low / Med / High |
-| Prepare | | | | Low / Med / High |
-| Confirm | | | | Low / Med / High |
-| Execute | | | | Low / Med / High |
-| Monitor | | | | Low / Med / High |
-| Modify | | | | Low / Med / High |
-| Conclude | | | | Low / Med / High |
-
-### Chốt 2 bước đau nhất
-
-**Bước đau nhất #1:** _________________________________  
-**Bước đau nhất #2:** _________________________________
-
-**Vì sao đây là nơi đáng chú ý nhất:**  
-> _______________________________________________  
-> _______________________________________________
-
----
-
-## Bước 8 — Chỉ ra `AI Leverage Point`
-
-Sau khi map workflow, mới hỏi:
-**AI nên vào đâu, với vai trò gì, và vì sao là ở đó?**
-
-### Nhắc nhanh
-
-- Đừng nhét AI vào chỉ vì "có AI thì nghe hay"
-- Nếu pain lớn nhất không nằm ở chỗ AI giải tốt, hãy thành thật ghi ra
-- Nếu current alternative đã đủ tốt, project cần xem lại
-
-### Bảng leverage point
-
-| Step | AI nên giúp bằng cách nào? | Vì sao AI hợp ở đây? | Rủi ro chính nếu dùng AI |
+| # | When — Tình huống | I want to — Động lực | So I can — Kết quả |
 |---|---|---|---|
-| 1 | | | |
-| 2 | | | |
+| JS1 | Khi AI đề xuất dùng một API hoặc thư viện mà tôi chưa quen | Tôi muốn kiểm tra API đó có thật và phù hợp với phiên bản dependency của dự án | Tôi có thể áp dụng hướng sửa mà không tạo thêm lỗi tương thích |
+| JS2 | Khi tôi đang xử lý lỗi gấp và nhận được nhiều hướng giải quyết khác nhau | Tôi muốn biết hướng nào có bằng chứng đáng tin nhất và phù hợp nhất với codebase | Tôi có thể chọn phương án nhanh mà vẫn kiểm soát rủi ro |
+| JS3 | Khi code do AI tạo đã compile hoặc chạy được ở ví dụ đơn giản | Tôi muốn kiểm tra edge case, bảo mật và ảnh hưởng tới hành vi hiện tại | Tôi có thể merge thay đổi mà không gây regression hoặc lỗ hổng mới |
 
-### Kết luận nhanh
+Ba story cho thấy sản phẩm đáng xuất hiện sau khi AI đưa ra câu trả lời nhưng
+trước khi developer áp dụng hoặc merge code.
 
-**AI leverage point quan trọng nhất của dự án tôi là:**  
-> _______________________________________________
+## 5. Current Alternatives
 
-**Vì sao không phải ở bước khác:**  
-> _______________________________________________
+| Giải pháp hiện tại | User thuê nó để làm gì? | Điểm mạnh | Điểm yếu | Switching cost |
+|---|---|---|---|---|
+| Documentation chính thức | Xác minh API, cú pháp, version và hành vi được hỗ trợ | Nguồn gốc, độ tin cậy cao | Phân tán, tốn thời gian đọc và khó nối với context dự án | Trung bình |
+| Stack Overflow, GitHub Issues và web search | Tìm case tương tự và kinh nghiệm từ cộng đồng | Nhiều tình huống thực tế, có thảo luận và dấu hiệu kiểm chứng | Có thể cũ, khác version hoặc không khớp hoàn toàn với codebase | Thấp |
+| Chạy test, sandbox và code review | Kiểm tra hướng sửa trong thực tế | Sát với codebase và phát hiện regression tốt | Tốn thời gian; coverage không đầy đủ; cần người có kinh nghiệm | Cao |
 
----
+Nếu DevVerify biến mất, developer nhiều khả năng sẽ quay về kết hợp web search,
+documentation và chạy test thủ công.
 
-## Bước 9 — Viết `Product Hypothesis`
+## 6. JTBD Lite Map
 
-Bây giờ mới đến lúc viết hypothesis.
+| Step | User đang cố làm gì? | Cách làm hiện tại | Friction / pain | Mức đau |
+|---|---|---|---|---|
+| Define | Xác định lỗi, phạm vi ảnh hưởng và tiêu chí để kết luận một hướng sửa là hợp lệ | Đọc log, stack trace và mô tả lại vấn đề | Triệu chứng có thể bị nhầm với nguyên nhân gốc | High |
+| Locate | Tìm documentation, changelog, issue và case tương tự liên quan tới đề xuất | Search web, Stack Overflow, GitHub và tài liệu | Nguồn phân tán, khác version và tốn thời gian đối chiếu | High |
+| Prepare | Chuẩn bị code context, dependency, branch và test case tái hiện lỗi | Thu thập thủ công và tạo sandbox hoặc test | Khó tái hiện; dễ thiếu context cần thiết | Medium |
+| Confirm | Xác nhận đã có đủ môi trường, quyền truy cập, nguồn và tiêu chí để bắt đầu kiểm chứng | Kiểm tra checklist và chạy thử test tái hiện | Có thể bắt đầu kiểm chứng khi dữ liệu hoặc môi trường chưa sẵn sàng | Medium |
+| Execute | Đối chiếu từng claim với codebase và tài liệu, sau đó chạy test hoặc static analysis | Đọc nguồn, sửa code và chạy nhiều công cụ thủ công | Dễ bỏ sót mâu thuẫn; mất thời gian; đề xuất AI thường nghe rất thuyết phục | High |
+| Monitor | Quan sát kết quả test, log, cảnh báo bảo mật và thay đổi hành vi | Theo dõi output từ test suite, linter và ứng dụng | Tín hiệu nằm ở nhiều công cụ và coverage có thể không đầy đủ | Medium |
+| Modify | Điều chỉnh đề xuất, test hoặc phạm vi kiểm chứng khi phát hiện vấn đề | Quay lại AI, sửa prompt, test hoặc code | Vòng lặp thử-sai dài và dễ mất context | Medium |
+| Conclude | Quyết định chấp nhận hoặc loại bỏ hướng sửa, đồng thời lưu lại bằng chứng | Code review, pull request và ghi chú thủ công | Khó truy vết nguồn và lý do tin hoặc không tin đề xuất | Medium |
 
-### Công thức gợi ý
+### Hai bước đau nhất
 
-```text
-Nếu chúng ta giúp [job executor] làm [job / sub-job] tốt hơn ở bước [x],
-bằng cách [AI leverage],
-thì họ sẽ chuyển từ [current alternative] sang [hướng giải pháp của nhóm],
-vì [giá trị rõ nhất].
-```
+1. **Locate:** Developer phải tìm và đối chiếu nhiều nguồn có độ mới, phiên bản
+   và độ tin cậy khác nhau.
+2. **Execute:** Developer phải kiểm tra từng claim và khó nhận ra một đề xuất
+   nghe hợp lý nhưng không đúng với dependency, kiến trúc hoặc yêu cầu bảo mật.
 
-### Bản hypothesis của tôi
+Đây là hai bước đáng chú ý nhất vì chúng quyết định developer có đang kiểm
+chứng bằng bằng chứng thật hay chỉ bị thuyết phục bởi cách AI diễn đạt.
 
-> _______________________________________________  
-> _______________________________________________
+## 7. AI Leverage Point
 
-### Tín hiệu sớm nếu hypothesis này đúng
-
-1. _______________________________________________
-2. _______________________________________________
-
----
-
-## Bước 10 — Liệt kê `Assumptions to Validate`
-
-Job story chưa có research vẫn chỉ là **giả thuyết tốt hơn**, chưa phải sự thật.
-
-### 5 assumption thường đáng kiểm
-
-- Tôi đã chọn đúng `job executor`
-- Pain này thật sự đủ đau và xảy ra đủ thường xuyên
-- User sẽ đổi khỏi alternative hiện tại nếu có giải pháp tốt hơn
-- AI thực sự tạo giá trị ở step tôi chọn
-- User đủ tin kết quả AI để đưa vào workflow thật
-
-### Bảng assumptions
-
-| Assumption | Vì sao assumption này rủi ro? | Tôi đang có bằng chứng gì? | Cần validate bằng cách nào tiếp theo? |
+| Step | AI nên hỗ trợ như thế nào? | Vì sao AI phù hợp? | Rủi ro chính |
 |---|---|---|---|
-| A1 | | | |
-| A2 | | | |
-| A3 | | | |
-| A4 | | | |
-| A5 | | | |
+| Locate | Tự động truy xuất documentation chính thức, changelog, issue và nguồn cộng đồng liên quan tới đúng dependency/version | AI có thể hiểu truy vấn tự nhiên và tổng hợp nhiều nguồn nhanh hơn tìm kiếm thủ công | Truy xuất sai nguồn, dùng tài liệu cũ hoặc tạo citation không tồn tại |
+| Execute | So sánh đề xuất với codebase, dependency, test và policy; nêu claim nào đã có bằng chứng và claim nào chưa được xác minh | AI phù hợp với đối chiếu context và phát hiện mâu thuẫn trên nhiều artifact | Bỏ sót edge case, đánh giá quá tự tin hoặc làm lộ source code nhạy cảm |
 
-### Assumption nguy hiểm nhất nếu tôi đang sai
+**AI leverage point chính:** Bước Execute.
 
-> _______________________________________________
+Giá trị lớn nhất không phải tạo thêm một câu trả lời, mà là biến đề xuất thành
+một tập claim có thể kiểm tra, gắn mỗi claim với nguồn hoặc test phù hợp và
+hiển thị rõ phần chưa chắc chắn. Locate hỗ trợ thu thập bằng chứng, nhưng
+Execute mới là bước tạo ra kết quả kiểm chứng để developer quyết định.
 
----
+## 8. Product Hypothesis
 
-## Bước 11 — Share trong bàn (3')
+> Nếu DevVerify giúp developer xác minh hướng sửa lỗi ở bước Execute bằng cách
+> đối chiếu đề xuất AI với codebase, dependency, documentation có nguồn và kết
+> quả test, thì họ sẽ chuyển từ quy trình tìm kiếm và kiểm tra thủ công phân
+> tán sang một workflow kiểm chứng tập trung, vì họ có thể áp dụng code nhanh
+> hơn mà vẫn nhìn thấy bằng chứng, rủi ro và phần chưa chắc chắn.
 
-### Mỗi người / mỗi nhóm chỉ nói 4 thứ
+### Tín hiệu sớm nếu hypothesis đúng
 
-1. **Job executor của bạn là ai**
-2. **Core JTBD của bạn là gì**
-3. **Step đau nhất đang nằm ở đâu**
-4. **AI leverage point + assumption rủi ro nhất là gì**
+1. Developer giảm thời gian từ lúc nhận đề xuất AI đến lúc quyết định chấp
+   nhận hoặc loại bỏ đề xuất đó.
+2. Người dùng thường xuyên mở nguồn dẫn, chạy test được gợi ý và phát hiện được
+   đề xuất sai trước khi merge.
 
-### Nếu chưa biết hỏi ngược gì, dùng 4 câu này
+## 9. Assumptions to Validate
 
-1. **"Câu JTBD này có đang lỡ nhét solution vào không?"**
-2. **"Alternative hiện tại của user là gì, và tại sao họ chưa bỏ nó?"**
-3. **"Pain mạnh nhất nằm ở bước nào trong workflow, có chắc AI giải tốt được không?"**
-4. **"Assumption nào nếu sai thì cả hypothesis sẽ sập?"**
+| Assumption | Vì sao rủi ro? | Bằng chứng hiện có | Cách validate |
+|---|---|---|---|
+| A1. Developer gặp pain kiểm chứng đủ thường xuyên | Nếu pain hiếm, họ sẽ tiếp tục dùng quy trình hiện tại | AI được dùng rộng rãi nhưng mức độ kiểm chứng thực tế chưa rõ | Phỏng vấn 8–10 developer và thu diary về các đề xuất AI trong một tuần |
+| A2. Locate và Execute là hai bước đau nhất | Pain thật có thể nằm ở tái hiện lỗi, chuẩn bị môi trường hoặc theo dõi kết quả | Phân tích workflow hiện tại mới chỉ là giả thuyết | Quan sát trực tiếp 5 phiên debug có sử dụng AI |
+| A3. Có thể truy cập đủ context mà không gây rủi ro bảo mật | Doanh nghiệp có thể không cho phép gửi source code ra ngoài | Các AI coding tool enterprise cho thấy nhu cầu tồn tại | Prototype local-first và phỏng vấn security/engineering lead |
+| A4. Người dùng tin một lớp AI dùng để kiểm chứng AI khác | Nếu chỉ tạo thêm một câu trả lời, sản phẩm không giải quyết trust | Nguồn dẫn và test có thể tạo bằng chứng độc lập | A/B test báo cáo có citation/test với câu trả lời chỉ có kết luận |
+| A5. Giá trị tiết kiệm thời gian lớn hơn chi phí tích hợp | Nếu setup phức tạp, developer sẽ quay lại search và test thủ công | Chưa có bằng chứng trực tiếp | Làm IDE extension prototype và đo time-to-decision trên task thật |
 
-### Ghi nhanh sau khi nghe bàn phản biện
+**Assumption nguy hiểm nhất:** A4 — developer sẽ tin quy trình kiểm chứng nếu
+kết luận được gắn với bằng chứng có thể mở, chạy và tự xác nhận. Nếu DevVerify
+chỉ dùng AI để đưa ra thêm một phán đoán không kiểm chứng được, toàn bộ product
+hypothesis sẽ sụp đổ.
 
-| Ý phản biện tôi nghe được | Nó chạm vào phần nào? | Tôi sẽ giữ / sửa gì? |
-|---|---|---|
-| | | |
-| | | |
-| | | |
+## 10. Kết luận sau khi xem xét
 
----
+Tôi giữ nguyên `job executor` và `core JTBD` vì cả hai đều mô tả người trực
+tiếp thực hiện công việc và mục tiêu tồn tại độc lập với giải pháp. Tôi điều
+chỉnh `AI leverage point` từ Confirm sang Execute để bám đúng trình tự job map:
+Confirm xác nhận mọi điều kiện đã sẵn sàng, còn Execute mới là lúc developer
+thực hiện việc đối chiếu và chạy kiểm chứng.
 
-## Bước 12 — Chốt version cuối sau thảo luận
+Product hypothesis được giữ nguyên về giá trị cốt lõi nhưng cập nhật bước can
+thiệp thành Execute. Assumption quan trọng nhất vẫn là người dùng có tin và sử
+dụng kết quả kiểm chứng khi mỗi kết luận được gắn với nguồn hoặc test có thể tự
+xác nhận hay không.
 
-### Sau khi nghe phản biện, tôi thay đổi gì?
+## 11. Version cuối
 
-- [ ] Giữ nguyên `job executor`
-- [ ] Sửa `job executor`
-- [ ] Giữ nguyên `core JTBD`
-- [ ] Sửa `core JTBD`
-- [ ] Giữ nguyên `AI leverage point`
-- [ ] Sửa `AI leverage point`
-- [ ] Giữ nguyên `product hypothesis`
-- [ ] Sửa `product hypothesis`
+- **Job executor:** Developer trực tiếp dùng AI để debug hoặc sửa code.
+- **Core JTBD:** Xác minh một hướng sửa lỗi có đúng, tương thích và đủ an toàn
+  trong context của dự án trước khi áp dụng.
+- **Hai bước đau nhất:** Locate và Execute.
+- **AI leverage point:** Đối chiếu đề xuất với codebase, dependency,
+  documentation có nguồn và test; hiển thị rõ claim đã được xác minh và phần
+  chưa chắc chắn.
+- **Product hypothesis:** Developer sẽ chuyển sang workflow kiểm chứng tập
+  trung nếu DevVerify giúp họ ra quyết định nhanh hơn bằng bằng chứng có thể tự
+  kiểm tra.
+- **Assumption cần validate đầu tiên:** Developer tin và sử dụng một lớp kiểm
+  chứng có citation/test, thay vì xem nó như thêm một câu trả lời AI.
 
-### Vì sao tôi giữ / sửa?
+## Nguồn tham khảo
 
-> _______________________________________________  
-> _______________________________________________
-
-### Version cuối cùng tôi nộp
-
-**Job executor:**  
-> _______________________________________________
-
-**Core JTBD:**  
-> _______________________________________________
-
-**2 bước đau nhất trong workflow:**  
-> _______________________________________________
-
-**AI leverage point chính:**  
-> _______________________________________________
-
-**Product hypothesis:**  
-> _______________________________________________
-
-**Assumption cần validate đầu tiên:**  
-> _______________________________________________
-
----
-
-## Checklist trước khi nộp
-
-- [ ] Tôi đã khoanh đúng 1 lát cắt cụ thể của dự án.
-- [ ] Tôi đã phân biệt được `job executor` với buyer / influencer.
-- [ ] `Core JTBD` của tôi không nhét solution vào câu.
-- [ ] Tôi đã viết đủ 3 `job stories`.
-- [ ] Tôi đã điền `JTBD lite map` và khoanh ra 2 bước đau nhất.
-- [ ] Tôi đã chỉ ra `AI leverage point` thay vì nhảy thẳng vào feature list.
-- [ ] Tôi đã ghi rõ `assumptions to validate`.
-- [ ] Tôi đã sửa version cuối sau khi share trong bàn.
-
----
-
-## Nếu còn thời gian / làm về nhà
-
-- Phỏng vấn nhanh 1 người dùng thật để kiểm xem `job story` nào là sát nhất.
-- So sánh `current alternatives` với project của nhóm theo 3 tiêu chí: nhanh hơn, rẻ hơn, tin hơn.
-- Tự hỏi lại một câu khó: **nếu không dùng AI, project này còn tạo giá trị không?**
-- Nếu câu trả lời là "không", hãy xem lại liệu nhóm đang giải **job thật** hay chỉ đang tìm chỗ để nhét AI.
+- [Stack Overflow Developer Survey 2025 — AI](https://survey.stackoverflow.co/2025/ai)
+- [Kabir et al. — Is Stack Overflow Obsolete?](https://arxiv.org/abs/2308.02312)
